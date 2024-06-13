@@ -1,57 +1,70 @@
 <script>
-import axios from "axios";
+
+import AppHeader from './components/AppHeader.vue';
+import axios from 'axios';
 import { store } from "./store";
+
 export default {
+
   name: "Boolfix",
-  data() {
-    return {
-      store,
-      goSearch: "",
-    };
+
+  components: {
+    AppHeader,
+    
   },
-  methods: {
+  data(){
+    return{
+      store,
+    }
+  },
+
+    methods: {
     searchMovie() {
       axios
         .get(this.store.apiFilm, {
           params: {
             api_key: this.store.apiKey,
-            query: this.goSearch,
-          },
-        })
-        .then((response) => {
-          this.store.films = response.data.results;
-            console.log(response);
-            console.log(this.store.posterImage);
+            query: this.store.goSearch,
+
+            },
+            })
+            .then((response) => {
+              this.store.films = response.data.results;
+              console.log(this.store.posterImage);
         });
 
       axios
         .get(this.store.apiTv, {
           params: {
             api_key: this.store.apiKey,
-            query: this.goSearch,
+            query: this.store.goSearch,
           },
         })
         .then((response) => {
           this.store.tvShows = response.data.results;
-            console.log(response);
             console.log(this.store.posterImage);
         });
 
-      this.goSearch = "";
+      this.store.goSearch = "";
     },
   },
-};
+}
 </script>
 
 <template>
-  <input type="text" placeholder="Cerca Film" v-model="goSearch" />
-  <button @click="searchMovie">Cerca</button>
+<header>
+  <AppHeader @getMovies="searchMovie"/>
+</header>
+<main class="page-content">
   <div class="row">
     <h1 class="text-center">FILM</h1>
     <div v-for="film in store.films" class="col-lg-3 text-center">
       <div class="d-flex align-items-center flex-column mb-3">
-        <div>
-          <img class="poster-image" :src="store.imgSize + film.poster_path " alt="" />
+        <div v-if="film.poster_path  === null" >
+          <img class="poster-image" src=""   alt="" /> NON DISPONIBILE
+        </div>
+        <div v-else>
+          <img class="poster-image":src="store.imgSize + film.poster_path " alt="" />
         </div>
         <ul>
           <!-- Titolo Originale -->
@@ -62,10 +75,10 @@ export default {
 
           <!-- Lingua -->
           <li v-if="film.original_language === 'it'">
-            lingua del film: it <img class="flag-language" src="/public/flags/it4x3.svg" alt="" />
+            lingua del film: <img class="flag-language" src="/public/flags/it4x3.svg" alt="" />
           </li>
           <li v-else-if="film.original_language === 'en'">
-            lingua del film: en <img class="flag-language" src="/public/flags/us4x3.svg" alt="" />
+            lingua del film <img class="flag-language" src="/public/flags/us4x3.svg" alt="" />
           </li>
           <li v-else>lingua del film: {{ film.original_language }}</li>
 
@@ -87,8 +100,11 @@ export default {
     <h1 class="text-center">SERIE TV</h1>
     <div v-for="serietv in store.tvShows" class="col-lg-3 text-center">
       <div class="d-flex align-items-center flex-column mb-3">
-        <div>
-          <img class="poster-image" :src="store.imgSize + serietv.poster_path" alt="" />
+        <div v-if="serietv.poster_path  === null" >
+          <img class="poster-image" src="/src/img/99b11c7f-d1a9-469d-848c-08b7a18e87c1.jpg"   alt="" /> 
+        </div>
+        <div v-else>
+          <img class="poster-image":src="store.imgSize + serietv.poster_path " alt="" />
         </div>
         <ul>
           <!-- Titolo Originale -->
@@ -99,11 +115,11 @@ export default {
 
           <!-- Lingua -->
           <li v-if="serietv.original_language === 'it'">
-            lingua della serie tv: it
+            lingua della serie tv:
             <img class="flag-language" src="/public/flags/it4x3.svg" alt="" />
           </li>
           <li v-else-if="serietv.original_language === 'en'">
-            lingua della serie tv: en
+            lingua della serie tv:
             <img class="flag-language" src="/public/flags/us4x3.svg" alt="" />
           </li>
           <li v-else>lingua della serie tv: {{ serietv.original_language }}</li>
@@ -121,14 +137,21 @@ export default {
       </div>
     </div>
   </div>
+</main>
+
 </template>
 
 <style scoped>
+
 .flag-language {
   width: 20px;
 }
 
 .poster-image {
   width: 150px;
+}
+
+.page-content{
+  padding-top: 50px;
 }
 </style>
