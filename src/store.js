@@ -7,6 +7,7 @@ export const store = reactive ({
     tvShows: [],
     posterImage: [],
     
+    //variabile per la ricerca
     goSearch: '',
 
     //API & KEY
