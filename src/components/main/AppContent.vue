@@ -31,7 +31,7 @@ export default {
         .then((response) => {
           this.store.films = response.data.results;
           // console.log(this.store.posterImage);
-          // console.log(this.store.films);
+          console.log(this.store.films);
         });
 
       //chiamata API per le serie TV
@@ -46,8 +46,7 @@ export default {
         .then((response) => {
           this.store.tvShows = response.data.results;
           // console.log(this.store.posterImage);
-
-          // console.log(this.store.tvShows);
+          console.log(this.store.tvShows);
         });
 
   
@@ -70,48 +69,33 @@ export default {
     // },
 
     prevButtonFilm() {
-      console.log("prevbutton film cliccato");
       
-      if ((this.indexFilm === 0)) {
-        this.indexFilm === this.store.films.length - 1;
-      } else {
-        this.indexFilm-- ;
-      }
 
-      console.log(this.indexFilm);
+        this.indexFilm -- ;
+
+
     },
 
     nextButtonFilm() {
-      // console.log("nextbutton film cliccato");
-      this.indexFilm++;
-      if (this.store.films.length === this.indexFilm) {
-        this.indexFilm = 0;
-      }
+      
 
-      // console.log(this.indexFilm);
+        this.indexFilm ++;
+
+
     },
 
     prevButtonShow() {
-      // console.log("prevbutton tvshow cliccato");
 
-      if ((this.indexShow === 0)) {
-        this.indexShow = this.store.tvShows.length - 1;
-      } else {
-        this.indexShow - 5;
-      }
+        this.indexShow --;
 
-      // console.log(this.indexShow);
+
     },
 
     nextButtonShow() {
-      // console.log("nextbutton tvshow cliccato");
 
       this.indexShow++;
-      if (this.store.tvShows.length === this.indexShow) {
-        this.indexShow = 0;
-      }
 
-      // console.log(this.indexShow);
+
     },
   },
 };
@@ -138,7 +122,8 @@ export default {
         <div class="d-flex row">
           <div class="col-2 d-flex align-items-center justify-content-center">
             <div class="align-items-center justify-content-center">
-              <button class="prev-button" @click="prevButtonFilm"><</button>
+              <button class="prev-button" @click="prevButtonFilm" v-if="indexFilm === 0" style="display: none;"> < </button>
+              <button class="prev-button" @click="prevButtonFilm" v-else style="display:block;"> < </button>
             </div>
           </div>
 
@@ -155,7 +140,7 @@ export default {
                 <div>
                   <div v-if="film.poster_path === null">
                     <img
-                      class="poster-image"
+                      class="poster-image col-3"
                       src="/public/loghi/y9DpT.jpg"
                       alt=""
                     />
@@ -173,7 +158,8 @@ export default {
           </div>
           <div class="d-flex col-2 align-items-center justify-content-center">
             <div class="align-items-center justify-content-center">
-              <button class="next-button" @click="nextButtonFilm">></button>
+              <button class="next-button" @click="nextButtonFilm" v-if="indexFilm + sliderSize >= store.films.length" style="display: none;"> > </button>
+              <button class="next-button" @click="nextButtonFilm" v-else style="display: block;"> > </button>
             </div>
           </div>
         </div>
@@ -194,7 +180,8 @@ export default {
         <div class="d-flex row">
           <div class="col-2 d-flex align-items-center justify-content-center">
             <div class="align-items-center justify-content-center">
-              <button class="prev-button" @click="prevButtonShow"><</button>
+              <button class="prev-button" @click="prevButtonShow" v-if="indexShow === 0" style="display: none;"> < </button>
+              <button class="prev-button" @click="prevButtonShow" v-else style="display:block;"> < </button>
             </div>
           </div>
 
@@ -218,7 +205,7 @@ export default {
                   </div>
                   <div v-else>
                     <img
-                      class="poster-image"
+                      class="poster-image col-5"
                       :src="store.imgSize + serietv.poster_path"
                       alt=""
                     />
@@ -232,7 +219,8 @@ export default {
             <div
               class="align-items-center justify-content-center button-container"
             >
-              <button class="next-button" @click="nextButtonShow">></button>
+            <button class="next-button" @click="nextButtonShow" v-if="indexShow + sliderSize >= store.tvShows.length" style="display: none;"> > </button>
+            <button class="next-button" @click="nextButtonShow" v-else style="display: block;"> > </button>
             </div>
           </div>
         </div>
@@ -247,8 +235,10 @@ export default {
 }
 
 .poster-image {
-  width: 350px;
-  height: 175px;
+
+  width: 300px;
+  height: 200px;
+
 }
 
 .page-content {
