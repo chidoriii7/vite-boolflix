@@ -31,7 +31,7 @@ export default {
         .then((response) => {
           this.store.films = response.data.results;
           // console.log(this.store.posterImage);
-          console.log(this.store.films);
+          // console.log(this.store.films);
         });
 
       //chiamata API per le serie TV
@@ -46,7 +46,7 @@ export default {
         .then((response) => {
           this.store.tvShows = response.data.results;
           // console.log(this.store.posterImage);
-          console.log(this.store.tvShows);
+          // console.log(this.store.tvShows);
         });
 
   
@@ -69,34 +69,31 @@ export default {
     // },
 
     prevButtonFilm() {
+      this.indexFilm -- ;
       
-
-        this.indexFilm -- ;
-
-
     },
 
     nextButtonFilm() {
-      
-
-        this.indexFilm ++;
-
-
+      this.indexFilm ++ ;
     },
 
     prevButtonShow() {
-
-        this.indexShow --;
-
-
+      this.indexShow -- ;
     },
 
     nextButtonShow() {
-
-      this.indexShow++;
-
-
+      this.indexShow ++ ;
     },
+
+    selectImageFilm(indice) {
+      this.indexFilm = indice;
+      console.log(indice);
+    },
+
+    selectImageShow(indice) {
+      this.indexShow = indice;
+      console.log(indice);
+    }
   },
 };
 </script>
@@ -131,7 +128,7 @@ export default {
             <div
               v-for="(film, index) in store.films.slice(
                 this.indexFilm,
-                this.indexFilm + this.sliderSize
+                this.sliderSize, this.indexFilm + this.sliderSize
               )"
               :key="index"
               class="d-flex text-center"
@@ -143,13 +140,18 @@ export default {
                       class="poster-image col-3"
                       src="/public/loghi/y9DpT.jpg"
                       alt=""
+                      @pointerover="selectImageFilm(index)"
+                      @click="selectImageFilm(index)"
                     />
                   </div>
                   <div v-else>
                     <img
                       class="poster-image"
+                      :class="{activefilm: indexFilm === index}"
                       :src="store.imgSize + film.poster_path"
                       alt=""
+                      @pointerover="selectImageFilm(index)"
+                      @click="selectImageFilm(index)"
                     />
                   </div>
                 </div>
@@ -199,6 +201,9 @@ export default {
                   <div v-if="serietv.poster_path === null">
                     <img
                       class="poster-image"
+                      :class="{activeshow: indexShow === index}"
+                      @pointerover="selectImageShow(index)"
+                      @click="selectImageShow(index)"
                       src="/public/loghi/y9DpT.jpg"
                       alt=""
                     />
@@ -206,6 +211,9 @@ export default {
                   <div v-else>
                     <img
                       class="poster-image col-5"
+                      :class="{activeshow: indexShow === index}"
+                      @pointerover="selectImageShow(index)"
+                      @click="selectImageShow(index)"
                       :src="store.imgSize + serietv.poster_path"
                       alt=""
                     />
@@ -258,6 +266,17 @@ export default {
 .prev-button:hover,
 .next-button:hover {
   color: red;
+}
+
+.poster-image.activefilm {
+    border: 2px solid #ccc;
+    opacity: 1;
+}
+
+.poster-image.activeshow {
+
+  border: 2px solid red;
+  opacity: 1;
 }
 </style>
 
